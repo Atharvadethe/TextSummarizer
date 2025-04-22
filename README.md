@@ -78,11 +78,14 @@ npm start
 
 ## 🖼️ Screenshots
 
-### 🔹 Home Page
-![Home Page]((https://ibb.co/svFf4thx))
+## 🖼️ Screenshots
 
-### 🔹 Summary Result
-![Summary Result](https://ibb.co/BHPxr4H2)
+### 🔹 Home Page
+![Home Page]([https://your-host.com/homepage.png](https://ibb.co/svFf4thx))
+
+### 🔹 Summary Output
+![Summary Output]([https://your-host.com/summary.png](https://ibb.co/BHPxr4H2))
+
 
 
 ## Technologies Used
