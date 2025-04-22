@@ -81,10 +81,10 @@ npm start
 ## 🖼️ Screenshots
 
 ### 🔹 Home Page
-![Home Page]([https://your-host.com/homepage.png](https://ibb.co/svFf4thx))
+![Home Page](static/images/ss-1.jpg)
 
 ### 🔹 Summary Output
-![Summary Output]([https://your-host.com/summary.png](https://ibb.co/BHPxr4H2))
+![Summary Output](static/images/ss-2.jpg)
 
 
 
