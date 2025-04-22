@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <!-- Bootstrap CSS from Replit -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header text-center">
+        <div class="container">
+            <h1><i class="fas fa-file-alt me-2"></i>Text Summarizer</h1>
+            <p class="lead">Extract key insights from your text using TF-IDF and extractive summarization</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Input Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0"><i class="fas fa-pen me-2"></i>Input Text</h2>
+            </div>
+            <div class="card-body">
+                <form id="summarize-form">
+                    <div class="mb-3">
+                        <label for="input-text" class="form-label">Paste your text here:</label>
+                        <textarea class="form-control" id="input-text" rows="8" placeholder="Enter or paste your text here..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="num-sentences" class="form-label">Number of sentences in summary:</label>
+                        <select class="form-select" id="num-sentences">
+                            <option value="1">1 sentence</option>
+                            <option value="2">2 sentences</option>
+                            <option value="3" selected>3 sentences</option>
+                            <option value="4">4 sentences</option>
+                            <option value="5">5 sentences</option>
+                        </select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-magic me-1"></i> Summarize
+                        </button>
+                        <button type="button" id="add-example" class="btn btn-outline-secondary">
+                            <i class="fas fa-file-import me-1"></i> Load Example
+                        </button>
+                        <button type="button" id="clear-text" class="btn btn-outline-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="text-center my-4" style="display: none;">
+            <div class="spinner-border text-primary spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Processing your text...</p>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="error-alert" class="alert alert-danger" role="alert" style="display: none;"></div>
+
+        <!-- Results Section -->
+        <div class="row">
+            <!-- Summary Section -->
+            <div class="col-md-8 mb-4">
+                <div id="summary-section" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="h5 mb-0"><i class="fas fa-file-alt me-2"></i>Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p id="summary-content"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keywords Section -->
+            <div class="col-md-4 mb-4">
+                <div id="keywords-section" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="h5 mb-0"><i class="fas fa-key me-2"></i>Top Keywords</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">Based on TF-IDF scores</p>
+                        <ul id="keywords-list" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="h5 mb-0"><i class="fas fa-question-circle me-2"></i>How It Works</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h4 class="h6"><i class="fas fa-list-ol me-2"></i>Text Preprocessing</h4>
+                        <p>Your text is processed by removing punctuation, converting to lowercase, removing stopwords, and tokenizing into sentences and words.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h4 class="h6"><i class="fas fa-calculator me-2"></i>TF-IDF Analysis</h4>
+                        <p>TF-IDF (Term Frequency-Inverse Document Frequency) identifies important words by balancing how frequently they appear in your text against how common they are in general.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h4 class="h6"><i class="fas fa-key me-2"></i>Keyword Extraction</h4>
+                        <p>Words with the highest TF-IDF scores are selected as keywords that represent the most important concepts in your text.</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h4 class="h6"><i class="fas fa-file-alt me-2"></i>Extractive Summarization</h4>
+                        <p>Sentences containing the most keywords are extracted from your original text to create a concise summary that captures the main points.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center text-white-50 py-3 mt-5">
+        <div class="container">
+            <p>Text Summarizer using TF-IDF and Extractive Summarization</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+/* Additional custom styles beyond Bootstrap */
+
+/* Textarea min height */
+#input-text {
+    min-height: 200px;
+}
+
+/* Summary highlight */
+#summary-content {
+    padding: 15px;
+    border-radius: 5px;
+    background-color: var(--bs-dark);
+}
+
+/* Animate the loading spinner */
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+
+.spinner {
+    animation: spinner 1s linear infinite;
+}
+
+/* Make sure the page has sufficient padding */
+body {
+    padding-bottom: 3rem;
+}
+
+/* Style the header with gradient background */
+.app-header {
+    background: linear-gradient(90deg, var(--bs-dark), var(--bs-dark-rgb));
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-3px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Form controls with focus effect */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-info-rgb), 0.25);
+}
+
+/* Keyword badge style */
+.keywords-badge {
+    font-size: 0.85rem;
+    background-color: var(--bs-primary);
+}
