@@ -14,6 +14,14 @@ except LookupError:
     nltk.download('punkt')
     nltk.download('stopwords')
 
+# We don't need punkt_tab, as we can use a different method for tokenization
+# Create a basic tokenization function to use if nltk's word_tokenize has issues
+def simple_tokenize(text):
+    """Simple tokenizer that splits on whitespace and punctuation"""
+    # Replace punctuation with spaces and then split
+    text = re.sub(r'[^\w\s]', ' ', text)
+    return text.split()
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -28,11 +36,45 @@ def preprocess_text(text):
         tuple: (tokens, sentences) - list of tokens and list of sentences
     """
     try:
-        # Split text into sentences
-        sentences = sent_tokenize(text)
+        # Check that the text has enough content to process
+        if not text or len(text.strip()) < 10:
+            logging.warning("Input text is too short for meaningful processing")
+            return [], []
+            
+        # Split text into sentences using NLTK, or fallback to basic splitting
+        try:
+            sentences = sent_tokenize(text)
+        except Exception as e:
+            logging.warning(f"NLTK sentence tokenization failed, using fallback: {str(e)}")
+            # Basic sentence splitting on periods, question marks, and exclamation points
+            sentences = re.split(r'(?<=[.!?])\s+', text)
         
-        # Get stopwords
-        stop_words = set(stopwords.words('english'))
+        if not sentences:
+            logging.warning("Could not identify any sentences in the text")
+            return [], []
+            
+        # Get stopwords (with fallback to common English stopwords)
+        try:
+            stop_words = set(stopwords.words('english'))
+        except Exception as e:
+            logging.warning(f"Could not get NLTK stopwords, using fallback list: {str(e)}")
+            # Common English stopwords as fallback
+            stop_words = set([
+                'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 
+                'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 
+                'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 
+                'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 
+                'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 
+                'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 
+                'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 
+                'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 
+                'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 
+                'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 
+                'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 
+                'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 
+                'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 
+                't', 'can', 'will', 'just', 'don', 'should', 'now'
+            ])
         
         # Initialize list for tokens
         all_tokens = []
@@ -45,8 +87,12 @@ def preprocess_text(text):
             # Remove punctuation except periods (to keep sentence structure)
             sentence = re.sub(r'[^\w\s\.]', '', sentence)
             
-            # Tokenize the sentence
-            tokens = word_tokenize(sentence)
+            # Try to tokenize with NLTK, fall back to simple tokenize if it fails
+            try:
+                tokens = word_tokenize(sentence)
+            except Exception as e:
+                logging.warning(f"NLTK tokenization failed, using fallback: {str(e)}")
+                tokens = simple_tokenize(sentence)
             
             # Remove stopwords and non-alphabetic tokens
             tokens = [token for token in tokens if token.isalpha() and token not in stop_words]
@@ -54,6 +100,11 @@ def preprocess_text(text):
             # Add to the list of all tokens
             all_tokens.extend(tokens)
         
+        # Check if we have enough tokens for meaningful analysis
+        if len(all_tokens) < 5:
+            logging.warning("Not enough meaningful words found after preprocessing")
+            return [], []
+            
         return all_tokens, sentences
     except Exception as e:
         logging.error(f"Error preprocessing text: {str(e)}")
@@ -129,8 +180,15 @@ def generate_summary(sentences, tf_idf_scores, num_sentences=3):
         sentence_scores = []
         
         for i, sentence in enumerate(sentences):
-            # Lowercase and tokenize the sentence
-            words = word_tokenize(sentence.lower())
+            # Lowercase the sentence
+            sentence_lower = sentence.lower()
+            
+            # Try to tokenize with NLTK, fall back to simple tokenize if it fails
+            try:
+                words = word_tokenize(sentence_lower)
+            except Exception as e:
+                logging.warning(f"NLTK tokenization failed in summary generation, using fallback: {str(e)}")
+                words = simple_tokenize(sentence_lower)
             
             # Calculate sentence score based on TF-IDF scores of words
             score = sum(tf_idf_scores.get(word, 0) for word in words)

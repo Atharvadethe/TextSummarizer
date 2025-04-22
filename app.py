@@ -37,7 +37,7 @@ def summarize():
         tokens, sentences = preprocess_text(text)
         
         if not tokens or not sentences:
-            return jsonify({'error': 'Could not process the text. Please provide more content.'}), 400
+            return jsonify({'error': 'Could not process the text. Please provide more content with complete sentences (at least a paragraph with 2-3 sentences).'}), 400
             
         # Calculate TF-IDF
         tf_idf_scores = calculate_tf_idf(tokens, sentences)
