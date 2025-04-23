@@ -14,8 +14,6 @@ except LookupError:
     nltk.download('punkt')
     nltk.download('stopwords')
 
-# We don't need punkt_tab, as we can use a different method for tokenization
-# Create a basic tokenization function to use if nltk's word_tokenize has issues
 def simple_tokenize(text):
     """Simple tokenizer that splits on whitespace and punctuation"""
     # Replace punctuation with spaces and then split
