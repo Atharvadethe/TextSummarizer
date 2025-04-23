@@ -1,5 +1,5 @@
-//Name-Kaivalya sawant
-//PRN-22070521195
+//Name-Atharva Dethe
+//PRN-22070521156
 
 #include <stdbool.h>
 #include <stdio.h>
